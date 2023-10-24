@@ -1,3 +1,3 @@
 use world;
 select * from world.city
-	where name like 'c%';
+	where name like 'a%';
