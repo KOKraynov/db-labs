@@ -1,6 +1,6 @@
-use cd;
+USE cd;
 -- Task-3-1: Выберите лист времке  (timestamp) покупки времени использования объектов членом клуба 'David Farrell'.
-select b.starttime
-  from members m, bookings b
-  where m.memid = b.memid
-	and concat(m.firstname, ' ', m.surname) like '%David Farrell%';
+SELECT b.starttime
+  FROM members m, bookings b
+  WHERE m.memid = b.memid
+	AND concat(m.firstname, ' ', m.surname) = 'David Farrell';
