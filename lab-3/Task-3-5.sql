@@ -6,7 +6,7 @@ select distinct concat(m.firstname, ' ', m.surname) as name,
   where m.memid = b.memid
 	and b.facid = f.facid
 	and f.facility like '%Court%'
-	and (f.facility like '%1%' 
-        or f.facility like '%2%')
+	and (f.facility like '% 1' 
+        or f.facility like '% 2')
   order by name
 
