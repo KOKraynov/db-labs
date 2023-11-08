@@ -5,6 +5,8 @@ select distinct concat(m.firstname, ' ', m.surname) as name,
   from members m, bookings b, facilities f
   where m.memid = b.memid
 	and b.facid = f.facid
-	and f.facility like '%Tennis Court%'
+	and f.facility like '%Court%'
+	and (f.facility like '%1%' 
+        or f.facility like '%2%')
   order by name
 

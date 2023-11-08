@@ -6,11 +6,11 @@ SELECT f.facility,
        case
          when m.zipcode = 0 then f.guestcost
          else f.membercost
-	   end as cost
+	   end * b.slots as cost
   FROM bookings b, members m, facilities f
   WHERE b.memid = m.memid
     AND b.facid = f.facid
     AND DATE(b.starttime) = '2012-09-14'
-    AND ((m.zipcode = 0 and f.guestcost > 30)
-	  OR (m.zipcode <> 0 and f.membercost > 30))
+    AND ((m.zipcode = 0 and f.guestcost * b.slots > 30)
+	  OR (m.zipcode <> 0 and f.membercost * b.slots > 30))
   ORDER BY 3 DESC
