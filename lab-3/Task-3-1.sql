@@ -3,4 +3,5 @@ USE cd;
 SELECT b.starttime
   FROM members m, bookings b
   WHERE m.memid = b.memid
-	AND concat(m.firstname, ' ', m.surname) = 'David Farrell';
+	AND m.firstname = 'David'
+    AND m.surname = 'Farrell';
