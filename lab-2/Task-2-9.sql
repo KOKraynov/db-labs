@@ -2,5 +2,4 @@
 use cd;
 SELECT surname, firstname
   FROM members 
-  WHERE joindate >= "2012-09-01"
-    AND zipcode <> 0;
+  WHERE joindate > "2012-08-31";
