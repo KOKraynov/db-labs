@@ -6,6 +6,6 @@ INSERT INTO facilities(FACID, facility, membercost, guestcost, initialoutlay, mo
          f.initialoutlay, f.monthlymaintenance
     FROM facilities f
     where f.facility = 'spa'
-	limit 1;
+	  limit 1;
 COMMIT;
 -- Эта конструкция может бесконечно добавлять с новыми ID
