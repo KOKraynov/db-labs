@@ -2,4 +2,5 @@
 use cd;
 SELECT surname, firstname
   FROM members 
-  WHERE joindate > "2012-08-31";
+  WHERE joindate >= "2012-09-01"
+    AND MEMID <> 0;
