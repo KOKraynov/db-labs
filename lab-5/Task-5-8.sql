@@ -9,4 +9,5 @@ SELECT f.facility,
   FROM bookings b, facilities f, members m
   WHERE b.facid = f.facid
     AND b.memid = m.memid
-  GROUP BY f.facility;
+  GROUP BY f.facility
+  ORDER BY 2;
