@@ -1,5 +1,4 @@
 use cd;
 -- Task-5-1: Рассчитайте количество зарегистрированных объектов в теннисном клубе
 SELECT count(*)
-  FROM facilities f
-  WHERE f.facility LIKE '%TENNIS%';
+  FROM facilities f;
