@@ -6,7 +6,7 @@ SELECT facility, DOXOD
 			   sum(CASE
 					 WHEN surname like "guest" THEN f.guestcost
 					 ELSE f.membercost
-				   END) AS DOXOD
+				   END * b.slots) AS DOXOD
 		  FROM bookings b, facilities f, members m
 		  WHERE b.facid = f.facid
 			AND b.memid = m.memid
