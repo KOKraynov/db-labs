@@ -1,25 +1,19 @@
 use cd;
 DELIMITER //
 
-DROP FUNCTION IF EXISTS F_GET_AREND //
+DROP PROCEDURE IF EXISTS F_GET_AREND //
 -- Task-7-3. Напишите процедуру, которая считает окупаемость каждого объекта клуба на основании оплаты аренд за месяц. Применить ее к июлю 2012 года.  
-CREATE FUNCTION F_GET_AREND(vFacID INTEGER, vYear INTEGER, vMonth INTEGER) RETURNS FLOAT
+CREATE PROCEDURE F_GET_AREND(vFacID INTEGER, vYear INTEGER, vMonth INTEGER) 
   READS SQL DATA
-NOT DETERMINISTIC
+  NOT DETERMINISTIC
 BEGIN
-  DECLARE vAREND FLOAT;
-  DECLARE vRENT FLOAT;
-  -- Сумма аренд
-  SELECT SUM(F_GET_AREND(b.bookid, b.facid, b.memid)) INTO vAREND
-    FROM bookings b
-    WHERE b.facid = vFacID
-      AND YEAR(b.starttime) = vYear
-      AND MONTH(b.starttime) = vMonth;
-  -- Значение ренты
-  SELECT f.monthlymaintenance INTO vRENT
-    FROM facilities f
-    WHERE f.facid = vFacID;
-  RETURN(vAREND - vRENT);
+  SELECT IF (SUM(p.payment) - f.monthlymaintenance = 0, 10000000000000,
+            f.initialoutlay / (SUM(p.payment) - f.monthlymaintenance)) AS income
+    FROM payments AS p
+    JOIN bookings AS b ON b.bookid = p.bookid
+	JOIN facilities AS f ON b.facid = f.facid
+	WHERE curfacid = b.facid AND MONTH(starttime) = m AND YEAR(starttime) = y
+	GROUP BY b.facid;
 END //
 
 DELIMITER ;

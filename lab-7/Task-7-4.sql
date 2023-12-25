@@ -14,22 +14,35 @@ BEGIN
   -- Создание временной таблицы для расчета
   CREATE TEMPORARY TABLE IF NOT EXISTS RentChange AS
   SELECT b.facid,
-         SUM(CASE 
-               WHEN b.memid = 0 THEN f.guestcost * b.slots
-               ELSE f.membercost * b.slots
-             END) AS rent,
-         SUM(p.payment) - f.monthlymaintenance AS profit
+         1 AS new_rent_coef,
+         SUM(p.payment) AS income,
+         ceil(DATEDIFF(sysdate(), MIN(b.starttime))*12/365)  as count_month,
+         f.initialoutlay, f.monthlymaintenance,
+         0 AS month_before_profit
     FROM bookings b
     LEFT JOIN facilities f ON b.facid = f.facid
     LEFT JOIN payments p ON b.bookid = p.bookid
     GROUP BY b.facid;
-
+-- income суммарые поступления, count_month месяцы эксплуатации, initialoutlay цена объекта, monthlymaintenance цена месяца эксплуатации
+-- Посчитаем сколько месяцев будет окупаться при тек цене
+  UPDATE RentChange 
+	SET month_before_profit = 
+      CASE 
+        -- не окупается в принципе, никогда
+		WHEN (count_month * monthlymaintenance >= income) THEN -1 
+        -- Цена здания / (доход-расход) * кол-во прошедших месяцев
+        ELSE CEIL((initialoutlay) / (income - count_month * monthlymaintenance) * count_month)
+      END;
   -- Расчет изменения стоимости аренды
   UPDATE RentChange 
-	SET rent = CASE 
-                 WHEN (profit <= 0 OR rent <= 0) THEN 0
-                 ELSE rent * (1 + in_percentage_change / 100)
-               END;
+	SET new_rent_coef = 
+      CASE 
+        -- не окупается в принципе, цену не меняем
+		WHEN (count_month * monthlymaintenance >= income) THEN 1 
+        --  (срок окупаемости - прошедшие месяцы) / (срок окупаемости + нужный нам % - прошедшие месяцы)
+        --  -% и цена взлетает наверх, срок быстрее, цена выше, все ок.
+        ELSE (month_before_profit-count_month)/((month_before_profit)*(1 + in_percentage_change / 100)-count_month)
+      END;
   -- Возвращение сообщения об успешном завершении
   RETURN 'Изменения аренды рассчитаны и сохранены в sql файл';
 END//
