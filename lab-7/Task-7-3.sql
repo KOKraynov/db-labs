@@ -12,7 +12,7 @@ BEGIN
     FROM payments AS p
     JOIN bookings AS b ON b.bookid = p.bookid
 	JOIN facilities AS f ON b.facid = f.facid
-	WHERE curfacid = b.facid AND MONTH(starttime) = m AND YEAR(starttime) = y
+	WHERE vFacID = b.facid AND MONTH(starttime) = vMonth AND YEAR(starttime) = vYear
 	GROUP BY b.facid;
 END //
 
